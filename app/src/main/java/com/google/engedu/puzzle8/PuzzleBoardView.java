@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class PuzzleBoardView extends View {
     public void initialize(Bitmap imageBitmap, View parent) {
         int width = getWidth();
         puzzleBoard = new PuzzleBoard(imageBitmap, width);
+        Log.i("constructor","initialised");
     }
 
     @Override

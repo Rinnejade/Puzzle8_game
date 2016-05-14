@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,7 @@ import java.io.IOException;
 
 public class PuzzleActivity extends AppCompatActivity {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+//    static final int REQUEST_IMAGE_CAPTURE = 1;
     private Bitmap imageBitmap = null;
     private PuzzleBoardView boardView;
 
@@ -62,32 +63,42 @@ public class PuzzleActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Log.i("before","asdfghjkl error");
         ImageView myImageView = (ImageView) this.findViewById(R.id.imagePuzzle);
 //        PuzzleBoardView myImageView = (PuzzleBoardView) this.findViewById(R.id.imagePuzzle);
+        Log.i("after","asdfghjkl error");
 
         switch(requestCode) {
             case 0:
                 if(resultCode == RESULT_OK){
                     Bundle extras = data.getExtras();
-                    Bitmap imageBitmap= (Bitmap) extras.get("data");
+                    imageBitmap= (Bitmap) extras.get("data");
 //
-                    Bitmap dstBitmap = cropImage(imageBitmap);
-                    myImageView.setImageBitmap(dstBitmap);
-//                    myImageView.initialize(dstBitmap, this.getCurrentFocus());
+//                    Bitmap dstBitmap = cropImage(imageBitmap);
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                            imageBitmap, 400, 400, false);
+                    myImageView.setImageBitmap(resizedBitmap);
+                    PuzzleBoardView puzzleBoardView = null;
+                    puzzleBoardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
                 }
                 break;
             case 1:
                 if(resultCode == RESULT_OK){
+                    Bitmap bitmap = null;
                     Bitmap dstBitmap = null;
                     Uri selectedImage = data.getData();
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImage);
-                        dstBitmap = cropImage(bitmap);
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImage);
+//                        dstBitmap = cropImage(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myImageView.setImageBitmap(dstBitmap);
-//                    myImageView.initialize(dstBitmap, this.getCurrentFocus());
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                          bitmap , 400, 400, false);
+                    Log.i("from","asdfghjkl");
+                    myImageView.setImageBitmap(resizedBitmap);
+//                    myImageView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
+                    Log.i("from","asdfghjkl done");
                 }
                 break;
         }
@@ -123,27 +134,27 @@ public class PuzzleActivity extends AppCompatActivity {
 
     }
 //    crop image into a perfect square
-    public Bitmap cropImage(Bitmap srcBitmap){
-        Bitmap dstBmp = null;
-        if(srcBitmap.getHeight() >= srcBitmap.getWidth() ){
-           dstBmp = Bitmap.createBitmap(
-                    srcBitmap,
-                    0,
-                   srcBitmap.getHeight()/2 - srcBitmap.getWidth()/2,
-                   srcBitmap.getWidth(),
-                   srcBitmap.getWidth()
-            );
-        }else{
-            dstBmp = Bitmap.createBitmap(
-                    srcBitmap,
-                    srcBitmap.getWidth()/2 - srcBitmap.getHeight()/2,
-                    0,
-                    srcBitmap.getHeight(),
-                    srcBitmap.getHeight()
-            );
-        }
-        return dstBmp;
-    }
+//    public Bitmap cropImage(Bitmap srcBitmap){
+//        Bitmap dstBmp = null;
+//        if(srcBitmap.getHeight() >= srcBitmap.getWidth() ){
+//           dstBmp = Bitmap.createBitmap(
+//                    srcBitmap,
+//                    0,
+//                   srcBitmap.getHeight()/2 - srcBitmap.getWidth()/2,
+//                   srcBitmap.getWidth(),
+//                   srcBitmap.getWidth()
+//            );
+//        }else{
+//            dstBmp = Bitmap.createBitmap(
+//                    srcBitmap,
+//                    srcBitmap.getWidth()/2 - srcBitmap.getHeight()/2,
+//                    0,
+//                    srcBitmap.getHeight(),
+//                    srcBitmap.getHeight()
+//            );
+//        }
+//        return dstBmp;
+//    }
     private void cameraIntent(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
