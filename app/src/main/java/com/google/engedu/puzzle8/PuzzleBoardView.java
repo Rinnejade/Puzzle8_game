@@ -57,7 +57,7 @@ public class PuzzleBoardView extends View {
             // Do something.
             for (int i = 0; i < NUM_SHUFFLE_STEPS ; i++) {
                 ArrayList<PuzzleBoard> resultArrayList = puzzleBoard.neighbours();
-                puzzleBoard = resultArrayList.get(random.nextInt(resultArrayList.size() - 1));
+                puzzleBoard = resultArrayList.get(random.nextInt(resultArrayList.size()));
             }
         }
         invalidate();

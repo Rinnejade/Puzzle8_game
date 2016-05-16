@@ -19,11 +19,10 @@ public class PuzzleBoard {
             { 0, 1 }
     };
     private ArrayList<PuzzleTile> tiles;
-    private int chunkWidth;
 
     PuzzleBoard(Bitmap bitmap, int parentWidth) {
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, parentWidth, parentWidth, true);
-        chunkWidth= parentWidth/NUM_TILES;
+        int chunkWidth= parentWidth/NUM_TILES;
         int yCoord = 0;
         int i = 0;
         tiles= new ArrayList<PuzzleTile>();
@@ -44,7 +43,6 @@ public class PuzzleBoard {
 
     PuzzleBoard(PuzzleBoard otherBoard) {
         tiles = (ArrayList<PuzzleTile>) otherBoard.tiles.clone();
-        chunkWidth = otherBoard.chunkWidth;
     }
 
     public void reset() {
@@ -117,22 +115,21 @@ public class PuzzleBoard {
 
     public ArrayList<PuzzleBoard> neighbours() {
         ArrayList<PuzzleBoard> resultArrayList = new ArrayList<PuzzleBoard>();
-        int i=0;
-        int parentWidth = chunkWidth *NUM_TILES;
+        int i = 0;
         for (PuzzleTile tile:tiles) {
             if(tile==null)break;
             i++;
         }
-        int emptyTile = i;
-        int x = (emptyTile % NUM_TILES)*chunkWidth;
-        int y = (emptyTile / NUM_TILES)*chunkWidth;
-        for (int row = 0; row < NEIGHBOUR_COORDS.length; row++) {
-            int xCords = x + NEIGHBOUR_COORDS[row][0]*chunkWidth;
-            int yCords = y + NEIGHBOUR_COORDS[row][1]*chunkWidth;
-            if(xCords< parentWidth && yCords < parentWidth){
-                int num = getNumber(xCords, yCords);
+        Log.i("asdf ","empty "+i);
+        int tileX = i % NUM_TILES, tileY = i / NUM_TILES;
+        for (int[] delta : NEIGHBOUR_COORDS) {
+            int nullX = tileX + delta[0];
+            int nullY = tileY + delta[1];
+            if (nullX >= 0 && nullX < NUM_TILES && nullY >= 0 && nullY < NUM_TILES ) {
                 ArrayList<PuzzleTile> originalList = (ArrayList<PuzzleTile>)this.tiles.clone();
-                Collections.swap(tiles, emptyTile, num);
+                Collections.swap(tiles,XYtoIndex(nullX, nullY), XYtoIndex(tileX, tileY));
+                Log.i("asdf ","neigh "+XYtoIndex(nullX, nullY));
+//                swapTiles(XYtoIndex(nullX, nullY), XYtoIndex(tileX, tileY));
                 PuzzleBoard copy = new PuzzleBoard(this);
                 resultArrayList.add(copy);
                 this.tiles = (ArrayList<PuzzleTile>) originalList.clone();
@@ -144,20 +141,4 @@ public class PuzzleBoard {
     public int priority() {
         return 0;
     }
-
-    public int getNumber(int xCords, int yCords){
-        int i=0;
-        int yCoord = 0;
-        for(int x=0; x<NUM_TILES; x++){
-            int xCoord = 0;
-            for(int y=0; y<NUM_TILES; y++){
-                if(xCords==xCoord && yCords==yCoord) return i;
-                i++;
-                xCoord += chunkWidth;
-            }
-            yCoord = yCoord+ chunkWidth;
-        }
-        return 0;
-    }
-
 }
