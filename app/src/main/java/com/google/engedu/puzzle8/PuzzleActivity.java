@@ -63,10 +63,8 @@ public class PuzzleActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.i("before","asdfghjkl error");
 //        ImageView myImageView = (ImageView) this.findViewById(R.id.imagePuzzle);
-        PuzzleBoardView puzzleBoardView = new PuzzleBoardView(this);
-        Log.i("after","asdfghjkl error");
+//        boardView = new PuzzleBoardView(this.getBaseContext());
 
         switch(requestCode) {
             case 0:
@@ -78,7 +76,7 @@ public class PuzzleActivity extends AppCompatActivity {
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                             imageBitmap, 400, 400, false);
 //                    myImageView.setImageBitmap(resizedBitmap);
-                    puzzleBoardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
+                    boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
                 }
                 break;
             case 1:
@@ -94,7 +92,7 @@ public class PuzzleActivity extends AppCompatActivity {
                           imageBitmap , 400, 400, false);
 //                    Log.i("from","asdfghjkl");
 //                    myImageView.setImageBitmap(resizedBitmap);
-                    puzzleBoardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
+                    boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
 //                    Log.i("from","asdfghjkl done");
                 }
                 break;

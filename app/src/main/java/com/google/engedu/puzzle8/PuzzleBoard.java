@@ -25,19 +25,15 @@ public class PuzzleBoard {
         int yCoord = 0;
         int i = 0;
         tiles= new ArrayList<PuzzleTile>();
-        Log.i("asdfghjkl","inside puzzleboard before for"+parentWidth);
         for(int x=0; x<NUM_TILES; x++){
             int xCoord = 0;
             for(int y=0; y<NUM_TILES; y++){
                 if(i== NUM_TILES*NUM_TILES-1){
-                    tiles.add(new PuzzleTile(null, i++));
-//                    Log.i("asdfghjkl","after adding last: "+(i-1));
+                    tiles.add(null);
                     break;
                 }
-//                Log.i("asdfghjkl","inside for before : "+i);
                 Bitmap splitBitmap = Bitmap.createBitmap(scaledBitmap, xCoord, yCoord, chunkWidth, chunkWidth);
                 tiles.add(new PuzzleTile(splitBitmap, i++));
-//                Log.i("asdfghjkl","after adding arraylist: "+i);
                 xCoord += chunkWidth;
             }
             yCoord += chunkWidth;
@@ -64,7 +60,6 @@ public class PuzzleBoard {
             return;
         }
         for (int i = 0; i < NUM_TILES * NUM_TILES; i++) {
-            Log.i("asdfghjkl", "drawing "+i);
             PuzzleTile tile = tiles.get(i);
             if (tile != null) {
                 tile.draw(canvas, i % NUM_TILES, i / NUM_TILES);

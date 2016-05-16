@@ -28,17 +28,12 @@ public class PuzzleBoardView extends View {
 
     public void initialize(Bitmap imageBitmap, View parent) {
         int width = imageBitmap.getWidth();
-        Log.i("asdfghjkl","width :  "+width);
         puzzleBoard = new PuzzleBoard(imageBitmap, width);
-        if(puzzleBoard!=null)
-            Log.i("asdfghjkl","not null puzzle"+width);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        PuzzleBoard puzzleBoard = this.puzzleBoard;
-        Log.i("asdfghjkl", "inside puzzleBoard onDraw");
         if (puzzleBoard != null) {
             if (animation != null && animation.size() > 0) {
                 puzzleBoard = animation.remove(0);
@@ -54,8 +49,6 @@ public class PuzzleBoardView extends View {
             } else {
                 puzzleBoard.draw(canvas);
             }
-        }else{
-            Log.i("asdfghjkl","null puzzle");
         }
     }
 
