@@ -8,8 +8,8 @@
 
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
         android:id="@+id/imagePuzzle"
         android:layout_centerHorizontal="true"
         />
@@ -42,5 +42,4 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/shuffle_button"
         android:layout_toEndOf="@+id/shuffle_button" />
-
 </RelativeLayout>

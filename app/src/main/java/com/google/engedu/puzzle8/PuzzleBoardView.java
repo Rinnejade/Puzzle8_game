@@ -55,7 +55,12 @@ public class PuzzleBoardView extends View {
     public void shuffle() {
         if (animation == null && puzzleBoard != null) {
             // Do something.
+            for (int i = 0; i < NUM_SHUFFLE_STEPS ; i++) {
+                ArrayList<PuzzleBoard> resultArrayList = puzzleBoard.neighbours();
+                puzzleBoard = resultArrayList.get(random.nextInt(resultArrayList.size() - 1));
+            }
         }
+        invalidate();
     }
 
     @Override

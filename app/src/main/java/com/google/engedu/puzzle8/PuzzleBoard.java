@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -18,10 +19,11 @@ public class PuzzleBoard {
             { 0, 1 }
     };
     private ArrayList<PuzzleTile> tiles;
+    private int chunkWidth;
 
     PuzzleBoard(Bitmap bitmap, int parentWidth) {
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, parentWidth, parentWidth, true);
-        int chunkWidth= parentWidth/NUM_TILES;
+        chunkWidth= parentWidth/NUM_TILES;
         int yCoord = 0;
         int i = 0;
         tiles= new ArrayList<PuzzleTile>();
@@ -42,6 +44,7 @@ public class PuzzleBoard {
 
     PuzzleBoard(PuzzleBoard otherBoard) {
         tiles = (ArrayList<PuzzleTile>) otherBoard.tiles.clone();
+        chunkWidth = otherBoard.chunkWidth;
     }
 
     public void reset() {
@@ -113,10 +116,47 @@ public class PuzzleBoard {
     }
 
     public ArrayList<PuzzleBoard> neighbours() {
-        return null;
+        ArrayList<PuzzleBoard> resultArrayList = new ArrayList<PuzzleBoard>();
+        int i=0;
+        int parentWidth = chunkWidth *NUM_TILES;
+        for (PuzzleTile tile:tiles) {
+            if(tile==null)break;
+            i++;
+        }
+        int emptyTile = i;
+        int x = (emptyTile % NUM_TILES)*chunkWidth;
+        int y = (emptyTile / NUM_TILES)*chunkWidth;
+        for (int row = 0; row < NEIGHBOUR_COORDS.length; row++) {
+            int xCords = x + NEIGHBOUR_COORDS[row][0]*chunkWidth;
+            int yCords = y + NEIGHBOUR_COORDS[row][1]*chunkWidth;
+            if(xCords< parentWidth && yCords < parentWidth){
+                int num = getNumber(xCords, yCords);
+                ArrayList<PuzzleTile> originalList = (ArrayList<PuzzleTile>)this.tiles.clone();
+                Collections.swap(tiles, emptyTile, num);
+                PuzzleBoard copy = new PuzzleBoard(this);
+                resultArrayList.add(copy);
+                this.tiles = (ArrayList<PuzzleTile>) originalList.clone();
+            }
+        }
+        return resultArrayList;
     }
 
     public int priority() {
+        return 0;
+    }
+
+    public int getNumber(int xCords, int yCords){
+        int i=0;
+        int yCoord = 0;
+        for(int x=0; x<NUM_TILES; x++){
+            int xCoord = 0;
+            for(int y=0; y<NUM_TILES; y++){
+                if(xCords==xCoord && yCords==yCoord) return i;
+                i++;
+                xCoord += chunkWidth;
+            }
+            yCoord = yCoord+ chunkWidth;
+        }
         return 0;
     }
 

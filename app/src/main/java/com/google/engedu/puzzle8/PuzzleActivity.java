@@ -63,19 +63,13 @@ public class PuzzleActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-//        ImageView myImageView = (ImageView) this.findViewById(R.id.imagePuzzle);
-//        boardView = new PuzzleBoardView(this.getBaseContext());
-
         switch(requestCode) {
             case 0:
                 if(resultCode == RESULT_OK){
                     Bundle extras = data.getExtras();
                     imageBitmap= (Bitmap) extras.get("data");
-//
-//                    Bitmap dstBitmap = cropImage(imageBitmap);
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                             imageBitmap, 400, 400, false);
-//                    myImageView.setImageBitmap(resizedBitmap);
                     boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
                 }
                 break;
@@ -84,16 +78,13 @@ public class PuzzleActivity extends AppCompatActivity {
                     Uri selectedImage = data.getData();
                     try {
                         imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImage);
-//                        dstBitmap = cropImage(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                           imageBitmap , 400, 400, false);
-//                    Log.i("from","asdfghjkl");
 //                    myImageView.setImageBitmap(resizedBitmap);
                     boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
-//                    Log.i("from","asdfghjkl done");
                 }
                 break;
         }
@@ -126,30 +117,7 @@ public class PuzzleActivity extends AppCompatActivity {
 
     public void solve(View view) {
       boardView.solve();
-
     }
-//    crop image into a perfect square
-//    public Bitmap cropImage(Bitmap srcBitmap){
-//        Bitmap dstBmp = null;
-//        if(srcBitmap.getHeight() >= srcBitmap.getWidth() ){
-//           dstBmp = Bitmap.createBitmap(
-//                    srcBitmap,
-//                    0,
-//                   srcBitmap.getHeight()/2 - srcBitmap.getWidth()/2,
-//                   srcBitmap.getWidth(),
-//                   srcBitmap.getWidth()
-//            );
-//        }else{
-//            dstBmp = Bitmap.createBitmap(
-//                    srcBitmap,
-//                    srcBitmap.getWidth()/2 - srcBitmap.getHeight()/2,
-//                    0,
-//                    srcBitmap.getHeight(),
-//                    srcBitmap.getHeight()
-//            );
-//        }
-//        return dstBmp;
-//    }
     private void cameraIntent(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
