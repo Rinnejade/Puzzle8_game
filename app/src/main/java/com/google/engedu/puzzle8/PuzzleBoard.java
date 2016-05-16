@@ -2,8 +2,10 @@ package com.google.engedu.puzzle8;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PuzzleBoard {
@@ -18,29 +20,28 @@ public class PuzzleBoard {
     private ArrayList<PuzzleTile> tiles;
 
     PuzzleBoard(Bitmap bitmap, int parentWidth) {
-        Canvas canvas = new Canvas(bitmap);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, parentWidth, parentWidth, true);
         int chunkWidth= parentWidth/NUM_TILES;
         int yCoord = 0;
         int i = 0;
-
+        tiles= new ArrayList<PuzzleTile>();
+        Log.i("asdfghjkl","inside puzzleboard before for"+parentWidth);
         for(int x=0; x<NUM_TILES; x++){
             int xCoord = 0;
             for(int y=0; y<NUM_TILES; y++){
+                if(i== NUM_TILES*NUM_TILES-1){
+                    tiles.add(new PuzzleTile(null, i++));
+//                    Log.i("asdfghjkl","after adding last: "+(i-1));
+                    break;
+                }
+//                Log.i("asdfghjkl","inside for before : "+i);
                 Bitmap splitBitmap = Bitmap.createBitmap(scaledBitmap, xCoord, yCoord, chunkWidth, chunkWidth);
-                PuzzleTile tile = new PuzzleTile(splitBitmap, i++);
-                tiles.add(tile);
-                if(i== NUM_TILES*NUM_TILES-2) break;
+                tiles.add(new PuzzleTile(splitBitmap, i++));
+//                Log.i("asdfghjkl","after adding arraylist: "+i);
                 xCoord += chunkWidth;
             }
             yCoord += chunkWidth;
         }
-
-        Bitmap splitBitmap = Bitmap.createBitmap(null, parentWidth-chunkWidth, parentWidth-chunkWidth, chunkWidth, chunkWidth);
-        PuzzleTile tile = new PuzzleTile(splitBitmap, i+1);
-        tiles.add(tile);
-
-//        draw(canvas);
     }
 
     PuzzleBoard(PuzzleBoard otherBoard) {
@@ -63,6 +64,7 @@ public class PuzzleBoard {
             return;
         }
         for (int i = 0; i < NUM_TILES * NUM_TILES; i++) {
+            Log.i("asdfghjkl", "drawing "+i);
             PuzzleTile tile = tiles.get(i);
             if (tile != null) {
                 tile.draw(canvas, i % NUM_TILES, i / NUM_TILES);

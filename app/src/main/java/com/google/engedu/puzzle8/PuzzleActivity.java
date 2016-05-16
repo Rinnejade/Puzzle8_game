@@ -64,8 +64,8 @@ public class PuzzleActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.i("before","asdfghjkl error");
-        ImageView myImageView = (ImageView) this.findViewById(R.id.imagePuzzle);
-//        PuzzleBoardView myImageView = (PuzzleBoardView) this.findViewById(R.id.imagePuzzle);
+//        ImageView myImageView = (ImageView) this.findViewById(R.id.imagePuzzle);
+        PuzzleBoardView puzzleBoardView = new PuzzleBoardView(this);
         Log.i("after","asdfghjkl error");
 
         switch(requestCode) {
@@ -77,28 +77,25 @@ public class PuzzleActivity extends AppCompatActivity {
 //                    Bitmap dstBitmap = cropImage(imageBitmap);
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                             imageBitmap, 400, 400, false);
-                    myImageView.setImageBitmap(resizedBitmap);
-                    PuzzleBoardView puzzleBoardView = null;
+//                    myImageView.setImageBitmap(resizedBitmap);
                     puzzleBoardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
                 }
                 break;
             case 1:
                 if(resultCode == RESULT_OK){
-                    Bitmap bitmap = null;
-                    Bitmap dstBitmap = null;
                     Uri selectedImage = data.getData();
                     try {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImage);
+                        imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImage);
 //                        dstBitmap = cropImage(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(
-                          bitmap , 400, 400, false);
-                    Log.i("from","asdfghjkl");
-                    myImageView.setImageBitmap(resizedBitmap);
-//                    myImageView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
-                    Log.i("from","asdfghjkl done");
+                          imageBitmap , 400, 400, false);
+//                    Log.i("from","asdfghjkl");
+//                    myImageView.setImageBitmap(resizedBitmap);
+                    puzzleBoardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
+//                    Log.i("from","asdfghjkl done");
                 }
                 break;
         }

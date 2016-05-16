@@ -2,6 +2,7 @@ package com.google.engedu.puzzle8;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 
 
 public class PuzzleTile {
@@ -10,6 +11,7 @@ public class PuzzleTile {
     private int number;
 
     public PuzzleTile(Bitmap bitmap, int number){
+//        Log.i("asdfghjkl","inside puzzletile : "+number);
         this.bitmap = bitmap;
         this.number = number;
     }

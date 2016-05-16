@@ -19,6 +19,7 @@ public class PuzzleBoardView extends View {
     private ArrayList<PuzzleBoard> animation;
     private Random random = new Random();
 
+
     public PuzzleBoardView(Context context) {
         super(context);
         activity = (Activity) context;
@@ -26,14 +27,18 @@ public class PuzzleBoardView extends View {
     }
 
     public void initialize(Bitmap imageBitmap, View parent) {
-        int width = getWidth();
+        int width = imageBitmap.getWidth();
+        Log.i("asdfghjkl","width :  "+width);
         puzzleBoard = new PuzzleBoard(imageBitmap, width);
-        Log.i("constructor","initialised");
+        if(puzzleBoard!=null)
+            Log.i("asdfghjkl","not null puzzle"+width);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        PuzzleBoard puzzleBoard = this.puzzleBoard;
+        Log.i("asdfghjkl", "inside puzzleBoard onDraw");
         if (puzzleBoard != null) {
             if (animation != null && animation.size() > 0) {
                 puzzleBoard = animation.remove(0);
@@ -49,6 +54,8 @@ public class PuzzleBoardView extends View {
             } else {
                 puzzleBoard.draw(canvas);
             }
+        }else{
+            Log.i("asdfghjkl","null puzzle");
         }
     }
 
