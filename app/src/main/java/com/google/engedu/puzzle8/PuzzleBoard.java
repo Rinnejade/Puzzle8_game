@@ -20,31 +20,54 @@ public class PuzzleBoard {
     };
     private ArrayList<PuzzleTile> tiles;
 
+    private int steps=0;
+    private PuzzleBoard previousBoard = null;
+
     PuzzleBoard(Bitmap bitmap, int parentWidth) {
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, parentWidth, parentWidth, true);
-        int chunkWidth= parentWidth/NUM_TILES;
-        int yCoord = 0;
-        int i = 0;
-        tiles= new ArrayList<PuzzleTile>();
-        for(int x=0; x<NUM_TILES; x++){
-            int xCoord = 0;
-            for(int y=0; y<NUM_TILES; y++){
-                if(i== NUM_TILES*NUM_TILES-1){
-                    tiles.add(null);
-                    break;
+        if(bitmap!=null && parentWidth>0){
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, parentWidth, parentWidth, true);
+            int chunkWidth= parentWidth/NUM_TILES;
+            int yCoord = 0;
+            int i = 0;
+            tiles= new ArrayList<PuzzleTile>();
+            for(int x=0; x<NUM_TILES; x++){
+                int xCoord = 0;
+                for(int y=0; y<NUM_TILES; y++){
+                    if(i== NUM_TILES*NUM_TILES-1){
+                        tiles.add(null);
+                        break;
+                    }
+                    Bitmap splitBitmap = Bitmap.createBitmap(scaledBitmap, xCoord, yCoord, chunkWidth, chunkWidth);
+                    tiles.add(new PuzzleTile(splitBitmap, i++));
+                    xCoord += chunkWidth;
                 }
-                Bitmap splitBitmap = Bitmap.createBitmap(scaledBitmap, xCoord, yCoord, chunkWidth, chunkWidth);
-                tiles.add(new PuzzleTile(splitBitmap, i++));
-                xCoord += chunkWidth;
+                yCoord += chunkWidth;
             }
-            yCoord += chunkWidth;
         }
     }
 
     PuzzleBoard(PuzzleBoard otherBoard) {
         tiles = (ArrayList<PuzzleTile>) otherBoard.tiles.clone();
+        steps = otherBoard.steps++;
+        previousBoard = otherBoard;
     }
 
+    public PuzzleBoard getpreviousBoard(){
+        return previousBoard;
+    }
+
+    public void setValues(PuzzleBoard p, int steps){
+        this.steps = steps;
+        this.previousBoard = p;
+    }
+    public boolean isEqual(PuzzleBoard b){
+        if(this ==null || b == null ) return false;
+        for (int i = 0; i < NUM_TILES*NUM_TILES; i++) {
+            if(tiles.get(i)!=null && b.tiles.get(i)!=null && tiles.get(i).getNumber() != b.tiles.get(i).getNumber())
+                    return false;
+        }
+        return true;
+    }
     public void reset() {
         // Nothing for now but you may have things to reset once you implement the solver.
     }
@@ -120,25 +143,36 @@ public class PuzzleBoard {
             if(tile==null)break;
             i++;
         }
-        Log.i("asdf ","empty "+i);
         int tileX = i % NUM_TILES, tileY = i / NUM_TILES;
         for (int[] delta : NEIGHBOUR_COORDS) {
             int nullX = tileX + delta[0];
             int nullY = tileY + delta[1];
-            if (nullX >= 0 && nullX < NUM_TILES && nullY >= 0 && nullY < NUM_TILES ) {
-                ArrayList<PuzzleTile> originalList = (ArrayList<PuzzleTile>)this.tiles.clone();
-                Collections.swap(tiles,XYtoIndex(nullX, nullY), XYtoIndex(tileX, tileY));
-                Log.i("asdf ","neigh "+XYtoIndex(nullX, nullY));
-//                swapTiles(XYtoIndex(nullX, nullY), XYtoIndex(tileX, tileY));
+            if (nullX >= 0 && nullX < NUM_TILES && nullY >= 0 && nullY < NUM_TILES
+                    && tiles.get(XYtoIndex(nullX, nullY)) !=null ) {
                 PuzzleBoard copy = new PuzzleBoard(this);
+                Collections.swap(copy.tiles,XYtoIndex(nullX, nullY), XYtoIndex(tileX, tileY));
                 resultArrayList.add(copy);
-                this.tiles = (ArrayList<PuzzleTile>) originalList.clone();
             }
         }
         return resultArrayList;
     }
 
     public int priority() {
-        return 0;
+        int priority=0;
+        for (int i = 0; i < NUM_TILES*NUM_TILES; i++) {
+            if(tiles.get(i)!=null) {
+                int correctPos = tiles.get(i).getNumber();
+//                Log.i("asdf correct pos: ",""+correctPos);
+//                Log.i("asdf now pos: ",""+i);
+                int x0 = correctPos % NUM_TILES;
+                int y0 = correctPos / NUM_TILES;
+                int x1 = i % NUM_TILES;
+                int y1 = i / NUM_TILES;
+                priority += Math.abs(x1 - x0) + Math.abs(y1 - y0);
+            }
+        }
+//        isSolution
+        if(priority==0) return -1;
+        return priority+this.steps;
     }
 }

@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 public class PuzzleBoardView extends View {
@@ -60,6 +63,8 @@ public class PuzzleBoardView extends View {
                 puzzleBoard = resultArrayList.get(random.nextInt(resultArrayList.size()));
             }
         }
+//        Log.i("asdf steps : ",""+puzzleBoard.steps);
+//        Log.i("asdf manhattan dist",""+puzzleBoard.priority());
         invalidate();
     }
 
@@ -82,5 +87,41 @@ public class PuzzleBoardView extends View {
     }
 
     public void solve() {
+//        Log.i("asdf manhattan dist",""+puzzleBoard.priority());
+        PriorityQueue<PuzzleBoard> pq = new PriorityQueue<PuzzleBoard>(10000000, new Comparator<PuzzleBoard>() {
+            @Override
+            public int compare(PuzzleBoard puzzleBoard1, PuzzleBoard puzzleBoard2) {
+                return Integer.valueOf(puzzleBoard1.priority()).compareTo(puzzleBoard2.priority());
+            }
+        });
+        if(puzzleBoard!=null){
+            puzzleBoard.setValues(null, 0);
+            pq.add(puzzleBoard);
+        }
+
+        int i =0;
+        while(true){
+            PuzzleBoard currentBoard = pq.poll();
+            if(currentBoard == null ) break;
+//            is solution
+            if(currentBoard.priority()==-1){
+                animation = new ArrayList<PuzzleBoard>();
+                while(currentBoard!=null) {
+                    animation.add(currentBoard);
+                    currentBoard = currentBoard.getpreviousBoard();
+                }
+                Collections.reverse(animation);
+                invalidate();
+                break;
+            }
+//            not solution
+            else{
+                ArrayList<PuzzleBoard> resultArrayList = currentBoard.neighbours();
+                for (PuzzleBoard board:resultArrayList)
+                    if(!(board.isEqual(currentBoard.getpreviousBoard())))
+                        pq.add(board);
+            }
+        }
+
     }
 }
