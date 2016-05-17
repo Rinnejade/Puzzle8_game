@@ -2,9 +2,11 @@ package com.google.engedu.puzzle8;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +24,10 @@ import java.io.IOException;
 public class PuzzleActivity extends AppCompatActivity {
 
 //    static final int REQUEST_IMAGE_CAPTURE = 1;
+
     private Bitmap imageBitmap = null;
     private PuzzleBoardView boardView;
-
+    int numOfTiles ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +36,11 @@ public class PuzzleActivity extends AppCompatActivity {
         RelativeLayout container = (RelativeLayout) findViewById(R.id.puzzle_container);
         boardView = new PuzzleBoardView(this);
 
+
         // Some setup of the view.
         boardView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         container.addView(boardView);
+
     }
 
     @Override
@@ -54,7 +59,9 @@ public class PuzzleActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent i = new Intent(this, UserSettingActivity.class);
+            startActivity(i);
+//            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -70,7 +77,7 @@ public class PuzzleActivity extends AppCompatActivity {
                     imageBitmap= (Bitmap) extras.get("data");
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                             imageBitmap, 400, 400, false);
-                    boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
+                    boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container), numOfTiles);
                 }
                 break;
             case 1:
@@ -84,7 +91,7 @@ public class PuzzleActivity extends AppCompatActivity {
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                           imageBitmap , 400, 400, false);
 //                    myImageView.setImageBitmap(resizedBitmap);
-                    boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container));
+                    boardView.initialize(resizedBitmap, findViewById(R.id.puzzle_container), numOfTiles);
                 }
                 break;
         }
@@ -93,6 +100,10 @@ public class PuzzleActivity extends AppCompatActivity {
 
     public void selectImage(View view) {
 
+        SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(getBaseContext());
+
+        numOfTiles = Integer.parseInt(sharedPrefs.getString("tilenum", "1"));
         final CharSequence[] items = { "Take Photo", "Choose from Gallery"};
         AlertDialog.Builder builder = new AlertDialog.Builder(PuzzleActivity.this);
         builder.setTitle("Add Photo");

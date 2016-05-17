@@ -1,7 +1,9 @@
 package com.google.engedu.puzzle8;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -10,8 +12,7 @@ import java.util.List;
 
 
 public class PuzzleBoard {
-
-    private static final int NUM_TILES = 3;
+    private static int NUM_TILES = 3;
     private static final int[][] NEIGHBOUR_COORDS = {
             { -1, 0 },
             { 1, 0 },
@@ -23,7 +24,8 @@ public class PuzzleBoard {
     private int steps=0;
     private PuzzleBoard previousBoard = null;
 
-    PuzzleBoard(Bitmap bitmap, int parentWidth) {
+    PuzzleBoard(Bitmap bitmap, int parentWidth, int num) {
+        NUM_TILES = num;
         if(bitmap!=null && parentWidth>0){
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, parentWidth, parentWidth, true);
             int chunkWidth= parentWidth/NUM_TILES;
@@ -175,4 +177,5 @@ public class PuzzleBoard {
         if(priority==0) return -1;
         return priority+this.steps;
     }
+
 }

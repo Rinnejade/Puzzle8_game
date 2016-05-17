@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/user_setting" >
+        <EditTextPreference android:title="Your Name"
+            android:key="username"
+            android:summary="Please provide your username"></EditTextPreference>
+        <ListPreference
+                android:key="tilenum"
+                android:entries="@array/TilesWords"
+                android:entryValues="@array/TilesValues"
+                android:summary="@string/number_tiles"
+                android:title="@string/numberOfTiles" />
+    </PreferenceCategory>
+</PreferenceScreen>

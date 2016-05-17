@@ -2,8 +2,11 @@ package com.google.engedu.puzzle8;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +24,7 @@ public class PuzzleBoardView extends View {
     private PuzzleBoard puzzleBoard;
     private ArrayList<PuzzleBoard> animation;
     private Random random = new Random();
-
+    private int NUM_TILES;
 
     public PuzzleBoardView(Context context) {
         super(context);
@@ -29,9 +32,10 @@ public class PuzzleBoardView extends View {
         animation = null;
     }
 
-    public void initialize(Bitmap imageBitmap, View parent) {
+    public void initialize(Bitmap imageBitmap, View parent, int numOfTiles) {
         int width = imageBitmap.getWidth();
-        puzzleBoard = new PuzzleBoard(imageBitmap, width);
+        NUM_TILES = numOfTiles;
+        puzzleBoard = new PuzzleBoard(imageBitmap, width, NUM_TILES);
     }
 
     @Override
@@ -88,7 +92,7 @@ public class PuzzleBoardView extends View {
 
     public void solve() {
 //        Log.i("asdf manhattan dist",""+puzzleBoard.priority());
-        PriorityQueue<PuzzleBoard> pq = new PriorityQueue<PuzzleBoard>(10000000, new Comparator<PuzzleBoard>() {
+        PriorityQueue<PuzzleBoard> pq = new PriorityQueue<PuzzleBoard>(5000  , new Comparator<PuzzleBoard>() {
             @Override
             public int compare(PuzzleBoard puzzleBoard1, PuzzleBoard puzzleBoard2) {
                 return Integer.valueOf(puzzleBoard1.priority()).compareTo(puzzleBoard2.priority());
